@@ -30,44 +30,60 @@ public class Main {
         Main manager = new Main();
         Scanner scanner = new Scanner(System.in);
         System.out.println("CLI Task Manager. Type exit to leave the program.");
-        System.out.println("Commands: add, list, complete, delete");
-        System.out.print("> ");
-        String command = scanner.nextLine().strip();
-        if (command.equals("add")) {
-            System.out.print("Priority: ");
-            String priority = scanner.nextLine();
 
-            System.out.print("Title: ");
-            String title = scanner.nextLine();
-
-            try {
-                UUID taskId = manager.addTask(priority, title);
-                System.out.printf("Task Added: %s (Priority: %s, Id: %s) ", title, priority, taskId);
-            } catch (IllegalArgumentException e) {
-                System.out.println(e.getMessage());
-            }
-        } else {
-            System.out.println("add needs to take in a priority and name.");
+        while(true) {
+            System.out.println("Commands: add, list, complete, delete");
             System.out.print("> ");
-        }
-        if (command.equals("list")) {
-            manager.listTasks();
-        }
-        if (command.equals("delete")) {
-            System.out.print("Paste the id of the task to remove.");
-            String id = scanner.nextLine().strip();
-            UUID convertedStringId = UUID.fromString(id);
-            manager.deleteTask(convertedStringId);
-            System.out.printf("Task %s removed", id);
+            String command = scanner.nextLine().strip().toLowerCase(Locale.ROOT);
+            switch (command) {
+                case "exit" -> {
+                    System.out.println("Goodbye!");
+                    scanner.close();
+                    return;
+                }
+
+                case "add" -> {
+                    System.out.print("Priority: ");
+                    String priority = scanner.nextLine();
+
+                    System.out.print("Title: ");
+                    String title = scanner.nextLine();
+
+                    try {
+                        UUID taskId = manager.addTask(priority, title);
+                        System.out.printf("Task Added: %s (Priority: %s, Id: %s) ", title, priority, taskId);
+                        System.out.println();
+                    } catch (IllegalArgumentException e) {
+                        System.out.println(e.getMessage());
+                    }
+                }
+                case "list" -> manager.listTasks();
+                case "delete" -> {
+                    System.out.println("Paste the id of the task to remove.");
+                    System.out.print("> ");
+                    String id = scanner.nextLine().strip();
+                    UUID convertedStringId = UUID.fromString(id);
+                    manager.deleteTask(convertedStringId);
+                    System.out.printf("Task %s removed", id);
+                    System.out.println();
+                }
+                case "complete" -> {
+                    System.out.println("Paste the id of the task to complete.");
+                    System.out.print("> ");
+                    String id = scanner.nextLine().strip();
+                    UUID convertedStringId = UUID.fromString(id);
+                    manager.markTaskAsCompleted(convertedStringId);
+                    System.out.printf("Task %s completed", id);
+                    System.out.println();
+                }
+                default -> {
+                    System.out.println("Invalid command.");
+                    System.out.println();
+                    System.out.print("> ");
+                }
+            }
         }
 
-        if (command.equals("complete")) {
-            System.out.print("Paste the id of the task to complete.");
-            String id = scanner.nextLine().strip();
-            UUID convertedStringId = UUID.fromString(id);
-            manager.markTaskAsCompleted(convertedStringId);
-            System.out.printf("Task %s completed", id);
-        }
     }
     public Priority matchPriority(String priority){
         return switch (priority.strip().toLowerCase(Locale.ROOT)) {
