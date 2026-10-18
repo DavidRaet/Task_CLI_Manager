@@ -23,10 +23,11 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.stream.Stream;
 import java.util.Map;
+import java.util.UUID;
 
 public class Main {
     Path path = Path.of("tasks.txt");
-    Map<String, Task> tasks = new LinkedHashMap<>();
+    Map<UUID, Task> tasks = new LinkedHashMap<>();
     public static void main(String[] args) {
         System.out.println("CLI Task Manager");
         System.out.println("Commands: add, list, complete, delete");
@@ -37,8 +38,14 @@ public class Main {
     }
 
     public void listTasks(){
-        for (Map.Entry<String, Task> entry : tasks.entrySet()){
+        for (Map.Entry<UUID, Task> entry : tasks.entrySet()){
             System.out.println(entry.getValue());
         }
+    }
+
+    public void addTask(Priority priority, String title) {
+        UUID id = UUID.randomUUID();
+        tasks.put(id, new Task(priority, title, false));
+//      write to file and add bars to separate them
     }
 }

@@ -3,12 +3,10 @@ package main.java;
 import java.time.Instant;
 
 
-public record Task(String id, String title, Priority priority, boolean completed, Instant createdAt) {
-    public Task(String id, String title, Priority priority, boolean completed, Instant createdAt){
-        this.id = id;
+public record Task(Priority priority, String title, boolean completed) {
+    public Task(Priority priority, String title, boolean completed){
         this.title = title;
         this.priority = priority;
         this.completed = completed;
-        this.createdAt = createdAt;
     }
 }
