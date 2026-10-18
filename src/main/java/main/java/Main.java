@@ -22,4 +22,24 @@ public class Main {
 //        if user begins the command with add, they will need to input the title of the task and priority (LOW, MEDIUM, HIGH)
 //        if the user lists an invalid command, they will be met with an error dependent on how the test case
     }
+
+    public void listTasks(){
+
+    }
+
+    public void addTask(){
+
+    }
+
+    public void deleteTask(){
+
+    }
+
+    public void completeTask(){
+
+    }
+
+    public void deleteTaskById(){
+
+    }
 }
