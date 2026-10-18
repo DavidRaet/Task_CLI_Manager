@@ -14,32 +14,31 @@ package main.java;
 //complete <ID> and delete <ID> act on one task. An unknown ID reports that no task matched.
 //Run one command per process. The app reads and writes its task file in the process working directory, so a fresh process can reload it.
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.stream.Stream;
+import java.util.Map;
+
 public class Main {
+    Path path = Path.of("tasks.txt");
+    Map<String, Task> tasks = new LinkedHashMap<>();
     public static void main(String[] args) {
         System.out.println("CLI Task Manager");
         System.out.println("Commands: add, list, complete, delete");
-
-//        if user begins the command with add, they will need to input the title of the task and priority (LOW, MEDIUM, HIGH)
-//        if the user lists an invalid command, they will be met with an error dependent on how the test case
+//        if command starts with list: listTasks()
+//        if command starts with add: addTask()
+//        if command starts with complete: completeTask()
+//        if command starts wth delete: deleteTask()
     }
 
     public void listTasks(){
-
-    }
-
-    public void addTask(){
-
-    }
-
-    public void deleteTask(){
-
-    }
-
-    public void completeTask(){
-
-    }
-
-    public void deleteTaskById(){
-
+        for (Map.Entry<String, Task> entry : tasks.entrySet()){
+            System.out.println(entry.getValue());
+        }
     }
 }
