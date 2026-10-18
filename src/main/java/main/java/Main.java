@@ -19,19 +19,63 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.LinkedHashMap;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Stream;
-import java.util.Map;
-import java.util.UUID;
 
 public class Main {
     Path path = Path.of("tasks.txt");
     Map<UUID, Task> tasks = new LinkedHashMap<>();
+
     public static void main(String[] args) {
-        System.out.println("CLI Task Manager");
+        Main manager = new Main();
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("CLI Task Manager. Type exit to leave the program.");
         System.out.println("Commands: add, list, complete, delete");
-//        figure out how to get user input from the terminal
+        System.out.print("> ");
+        String command = scanner.nextLine().strip();
+        if (command.equals("add")) {
+            System.out.print("Priority: ");
+            String priority = scanner.nextLine();
+
+            System.out.print("Title: ");
+            String title = scanner.nextLine();
+
+            try {
+                UUID taskId = manager.addTask(priority, title);
+                System.out.printf("Task Added: %s (Priority: %s, Id: %s) ", title, priority, taskId);
+            } catch (IllegalArgumentException e) {
+                System.out.println(e.getMessage());
+            }
+        } else {
+            System.out.println("add needs to take in a priority and name.");
+            System.out.print("> ");
+        }
+        if (command.equals("list")) {
+            manager.listTasks();
+        }
+        if (command.equals("delete")) {
+            System.out.print("Paste the id of the task to remove.");
+            String id = scanner.nextLine().strip();
+            UUID convertedStringId = UUID.fromString(id);
+            manager.deleteTask(convertedStringId);
+            System.out.printf("Task %s removed", id);
+        }
+
+        if (command.equals("complete")) {
+            System.out.print("Paste the id of the task to complete.");
+            String id = scanner.nextLine().strip();
+            UUID convertedStringId = UUID.fromString(id);
+            manager.markTaskAsCompleted(convertedStringId);
+            System.out.printf("Task %s completed", id);
+        }
+    }
+    public Priority matchPriority(String priority){
+        return switch (priority.strip().toLowerCase(Locale.ROOT)) {
+            case "low" -> Priority.LOW;
+            case "medium" -> Priority.MEDIUM;
+            case "high" -> Priority.HIGH;
+            default -> throw new IllegalArgumentException("Invalid priority.");
+        };
     }
 
     public void listTasks(){
@@ -40,10 +84,12 @@ public class Main {
         }
     }
 
-    public void addTask(Priority priority, String title) {
+    public UUID addTask(String priority, String title) {
         UUID id = UUID.randomUUID();
-        tasks.put(id, new Task(priority, title, false));
+        Priority pri = matchPriority(priority);
+        tasks.put(id, new Task(pri, title, false));
 //      write to file and add bars to separate them
+        return id;
     }
 
     public void deleteTask(UUID id){
