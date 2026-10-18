@@ -31,10 +31,7 @@ public class Main {
     public static void main(String[] args) {
         System.out.println("CLI Task Manager");
         System.out.println("Commands: add, list, complete, delete");
-//        if command starts with list: listTasks()
-//        if command starts with add: addTask()
-//        if command starts with complete: completeTask()
-//        if command starts wth delete: deleteTask()
+//        figure out how to get user input from the terminal
     }
 
     public void listTasks(){
@@ -47,5 +44,15 @@ public class Main {
         UUID id = UUID.randomUUID();
         tasks.put(id, new Task(priority, title, false));
 //      write to file and add bars to separate them
+    }
+
+    public void deleteTask(UUID id){
+        tasks.remove(id);
+    }
+
+    public void markTaskAsCompleted(UUID id){
+        Task oldTask = tasks.get(id);
+        Task updatedTask = new Task(oldTask.priority(), oldTask.title(), true);
+        tasks.put(id, updatedTask);
     }
 }
