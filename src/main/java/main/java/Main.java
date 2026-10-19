@@ -59,10 +59,13 @@ public class Main {
                     System.out.println("Paste the id of the task to remove.");
                     System.out.print("> ");
                     String id = scanner.nextLine().strip();
-                    UUID convertedStringId = UUID.fromString(id);
-                    manager.deleteTask(convertedStringId);
-                    System.out.printf("Task %s removed", id);
-                    System.out.println();
+                    try {
+                        UUID convertedStringId = UUID.fromString(id);
+                        manager.deleteTask(convertedStringId);
+                        System.out.printf("Task %s removed%n", id);
+                    } catch (IllegalArgumentException | java.io.UncheckedIOException e) {
+                        System.out.println(e.getMessage());
+                    }
                 }
                 case "complete" -> {
                     System.out.println("Paste the id of the task to complete.");
@@ -98,19 +101,20 @@ public class Main {
     public UUID addTask(String priority, String title) throws IOException {
         UUID id = UUID.randomUUID();
         Priority pri = matchPriority(priority);
-        Task newTask = new Task(pri, title, false);
+        Task newTask = new Task(id, pri, title, false);
         tasks.put(id, newTask);
         fileStorage.saveTask(newTask);
         return id;
     }
 
     public void deleteTask(UUID id){
+        fileStorage.deleteTask(id);
         tasks.remove(id);
     }
 
     public void markTaskAsCompleted(UUID id){
         Task oldTask = tasks.get(id);
-        Task updatedTask = new Task(oldTask.priority(), oldTask.title(), true);
+        Task updatedTask = new Task(id, oldTask.priority(), oldTask.title(), true);
         tasks.put(id, updatedTask);
     }
 }
