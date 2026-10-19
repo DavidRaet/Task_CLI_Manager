@@ -20,7 +20,6 @@ import java.util.*;
 import java.util.stream.Stream;
 
 public class Main {
-    Path path = Path.of("tasks.txt");
     Map<UUID, Task> tasks = new LinkedHashMap<>();
 //  create a function to normalize tasks from the .txt file into Task Objects and append them to the LinkedHashMap
     public static void main(String[] args) {

@@ -1,5 +1,7 @@
 package main.java;
 
+import java.io.BufferedWriter;
+import java.nio.charset.Charset;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,12 +15,18 @@ import java.nio.file.Paths;
 
 public class TaskFileStorage {
     Path path = Paths.get("tasks.txt");
+    Charset charset = StandardCharsets.UTF_8;
 
-    private void saveTasks(List<Task> tasks) throws IOException {
-
+    public void saveTask(List<Task> tasks) throws IOException {
+        try (BufferedWriter writer = Files.newBufferedWriter(path, charset)) {
+            for (Task task : tasks) {
+                writer.write(formatTask(task));
+                writer.newLine();
+            }
+        }
     }
 
-    private List<Task> loadTasks() {
+    public List<Task> loadTasks() {
         try (BufferedReader reader = Files.newBufferedReader(path, StandardCharsets.UTF_8)) {
             List<Task> tasks = new ArrayList<>();
             String line;
@@ -29,6 +37,10 @@ public class TaskFileStorage {
         } catch (IOException e) {
             throw new UncheckedIOException("Unable to load tasks from " + path, e);
         }
+    }
+
+    private String formatTask(Task task) {
+        return task.priority() + " | " + task.title() + " | " + task.completed();
     }
 
     private Task parseTask(String line) {

@@ -16,6 +16,24 @@ class TaskFileStorageTest {
     Path directory;
 
     @Test
+    void savesTasksAndLoadsThemBack() throws Exception {
+        TaskFileStorage storage = new TaskFileStorage();
+        storage.path = directory.resolve("tasks.txt");
+        List<Task> tasks = List.of(new Task(Priority.HIGH, "Préparer release notes", false),
+                new Task(Priority.LOW, "Tidy desk", true));
+        Method save = TaskFileStorage.class.getDeclaredMethod("saveTask", List.class);
+        save.setAccessible(true);
+        save.invoke(storage, tasks);
+
+        assertEquals(List.of("HIGH | Préparer release notes | false", "LOW | Tidy desk | true"),
+                Files.readAllLines(storage.path));
+        assertEquals(tasks, load(storage));
+
+        save.invoke(storage, List.of());
+        assertEquals("", Files.readString(storage.path));
+    }
+
+    @Test
     void loadsAndNormalizesEveryTask() throws Exception {
         TaskFileStorage storage = new TaskFileStorage();
         storage.path = directory.resolve("tasks.txt");
