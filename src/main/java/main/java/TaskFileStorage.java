@@ -12,17 +12,19 @@ import java.io.UncheckedIOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 
 public class TaskFileStorage {
     Path path = Paths.get("tasks.txt");
     Charset charset = StandardCharsets.UTF_8;
 
-    public void saveTask(List<Task> tasks) throws IOException {
-        try (BufferedWriter writer = Files.newBufferedWriter(path, charset)) {
-            for (Task task : tasks) {
+    public void saveTask(Task task) throws IOException {
+        try (BufferedWriter writer = Files.newBufferedWriter(path, charset,
+                StandardOpenOption.CREATE, StandardOpenOption.APPEND)) {
                 writer.write(formatTask(task));
                 writer.newLine();
-            }
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
         }
     }
 

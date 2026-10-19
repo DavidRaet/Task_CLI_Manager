@@ -16,12 +16,13 @@ package main.java;
 
 
 
+import java.io.IOException;
 import java.util.*;
 
 public class Main {
+    private final TaskFileStorage fileStorage = new TaskFileStorage();
+    private final Map<UUID, Task> tasks = new LinkedHashMap<>();
 
-    Map<UUID, Task> tasks = new LinkedHashMap<>();
-//  create a function to normalize tasks from the .txt file into Task Objects and append them to the LinkedHashMap
     public static void main(String[] args) {
         Main manager = new Main();
         Scanner scanner = new Scanner(System.in);
@@ -49,11 +50,11 @@ public class Main {
                         UUID taskId = manager.addTask(priority, title);
                         System.out.printf("Task Added: %s (Priority: %s, Id: %s) ", title, priority, taskId);
                         System.out.println();
-                    } catch (IllegalArgumentException e) {
+                    } catch (IllegalArgumentException | IOException e) {
                         System.out.println(e.getMessage());
                     }
                 }
-                case "list" -> manager.listTasks();
+                case "list" -> manager.listTasks().forEach(System.out::println);
                 case "delete" -> {
                     System.out.println("Paste the id of the task to remove.");
                     System.out.print("> ");
@@ -90,17 +91,16 @@ public class Main {
         };
     }
 
-    public void listTasks(){
-        for (Map.Entry<UUID, Task> entry : tasks.entrySet()){
-            System.out.println(entry.getValue());
-        }
+    public List<Task> listTasks(){
+        return fileStorage.loadTasks();
     }
 
-    public UUID addTask(String priority, String title) {
+    public UUID addTask(String priority, String title) throws IOException {
         UUID id = UUID.randomUUID();
         Priority pri = matchPriority(priority);
-        tasks.put(id, new Task(pri, title, false));
-//      write to file and add bars to separate them
+        Task newTask = new Task(pri, title, false);
+        tasks.put(id, newTask);
+        fileStorage.saveTask(newTask);
         return id;
     }
 
