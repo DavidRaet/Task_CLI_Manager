@@ -14,10 +14,7 @@ package main.java;
 //complete <ID> and delete <ID> act on one task. An unknown ID reports that no task matched.
 //Run one command per process. The app reads and writes its task file in the process working directory, so a fresh process can reload it.
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
+
 import java.nio.file.Path;
 import java.util.*;
 import java.util.stream.Stream;
