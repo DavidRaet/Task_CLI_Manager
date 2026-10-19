@@ -15,11 +15,11 @@ package main.java;
 //Run one command per process. The app reads and writes its task file in the process working directory, so a fresh process can reload it.
 
 
-import java.nio.file.Path;
+
 import java.util.*;
-import java.util.stream.Stream;
 
 public class Main {
+
     Map<UUID, Task> tasks = new LinkedHashMap<>();
 //  create a function to normalize tasks from the .txt file into Task Objects and append them to the LinkedHashMap
     public static void main(String[] args) {
